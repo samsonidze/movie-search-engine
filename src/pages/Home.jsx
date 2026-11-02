@@ -36,7 +36,7 @@ export default function Home() {
       setError(null);
     } catch (err) {
       console.log(err);
-      setError("Failed to seatch movies...");
+      setError("Failed to search movies");
     } finally {
       setLoading(false);
     }

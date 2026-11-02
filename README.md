@@ -1,16 +1,43 @@
-# React + Vite
+# Movie Search
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Search the TMDB catalogue, browse what's popular right now, and keep a favourites list that survives reloads.
 
-Currently, two official plugins are available:
+**Live demo:** https://movie-search-engine-coral.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
+- **Popular on load** – the home page fetches TMDB's current popular movies
+- **Search** – query the TMDB search endpoint; duplicate submits while a request is in flight are ignored
+- **Favourites** – heart any card to save it; a dedicated `/favorites` route lists them
+- **Persistence** – favourites live in `localStorage` via a React Context (`MovieContext`) with `addToFavorites`, `removeFromFavorites` and `isFavorite`
+- Loading and error states, poster images from the TMDB image CDN, responsive card grid
 
-## React Compiler
+## Tech
+React 19 · Vite · React Router 7 · Context API · TMDB API · plain CSS modules per component
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Structure
+```
+src/
+├── services/api.js        # Thin TMDB client (popular + search)
+├── context/MovieContext.jsx
+├── pages/                 # Home (search + results), Favorites
+└── components/            # NavBar, MovieCard
+```
 
-## Expanding the ESLint configuration
+## Run locally
+1. Get a free API key from [TMDB](https://www.themoviedb.org/settings/api).
+2. Create a `.env` file (see `.env.example`):
+   ```
+   VITE_TMDB_API_KEY=your_key
+   ```
+3. Install and start:
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+> Note: like any purely client-side app, the key is still visible in the built bundle. TMDB keys are read-only and rate-limited, so that's acceptable here; for a key with write access or billing a small proxy endpoint would be the right fix.
+
+## What I'd improve next
+- Debounced search-as-you-type and pagination
+- A movie detail route with cast and trailer
+- Move the favourites to a `useSyncExternalStore`-backed store or TanStack Query
